@@ -50,7 +50,33 @@ test_set = test_datagen.flow_from_directory('dataset/test_set',
 
 classifier.fit_generator(
                     training_set,
-                    steps_per_epoch=8000,
-                    epochs=25,
+                    steps_per_epoch=80,
+                    epochs=3,
                     validation_data=test_set,
-                    validation_steps=2000)
+                    validation_steps=20)
+
+
+
+# serialize model to JSON
+model_json = classifier.to_json()
+with open("model.json", "w") as json_file:
+    json_file.write(model_json)
+# serialize weights to HDF5
+classifier.save_weights("model.h5")
+print("Saved model to disk")
+
+#
+#
+# # load json and create model
+# json_file = open('model.json', 'r')
+# loaded_model_json = json_file.read()
+# json_file.close()
+# loaded_model = model_from_json(loaded_model_json)
+# # load weights into new model
+# loaded_model.load_weights("model.h5")
+# print("Loaded model from disk")
+#
+# # evaluate loaded model on test data
+# loaded_model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+# score = loaded_model.evaluate(X, Y, verbose=0)
+# print("%s: %.2f%%" % (loaded_model.metrics_names[1], score[1]*100))
