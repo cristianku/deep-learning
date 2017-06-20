@@ -80,8 +80,8 @@ test_set        = test_datagen.flow_from_directory('dataset/test_set',
 #
 classifier.fit_generator(
                     training_set,
-                    steps_per_epoch=30,      # number of images per epochs ( per batch )
-                    epochs=10,                #Total number of steps (batches of samples)
+                    steps_per_epoch=100,      # number of images per epochs ( per batch )
+                    epochs=5,                #Total number of steps (batches of samples)
                                               # to yield from generator before declaring one epoch
                                               # finished and starting the next epoch.
                                               # It should typically be equal to the number of unique samples
