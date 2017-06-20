@@ -13,11 +13,23 @@ classifier = Sequential()
 
 
 # Step 1 - Convolution
-#                             number of feature maps,, kerne size
+#  number of feature detectors,, kerne size
+# feature detectors = 32
+# size of filter kernel = 3
 classifier.add(Convolution2D(32,3,3,input_shape=(64,64,3), activation='relu'))
 
 # Step 2 - Pooling
 classifier.add(MaxPooling2D(pool_size=(2,2)))
+
+###################
+# adding second convolutional layer
+# increase feature detectors to 64
+classifier.add(Convolution2D(64,3,3, activation='relu'))
+# Step 2 - Pooling
+classifier.add(MaxPooling2D(pool_size=(2,2)))
+###################
+
+
 
 # Step 3 - Flattening
 classifier.add(Flatten ())
@@ -51,6 +63,9 @@ training_set = train_datagen.flow_from_directory('dataset/training_set',
                                                  batch_size=32,
                                                  class_mode='binary')
 
+print (training_set.class_indices)
+
+
 # TEST SET AUGMENTATION
 
 # rescaling between 0 and 1
@@ -65,8 +80,8 @@ test_set        = test_datagen.flow_from_directory('dataset/test_set',
 #
 classifier.fit_generator(
                     training_set,
-                    steps_per_epoch=25,      # number of images per epochs ( per batch )
-                    epochs=3,                #Total number of steps (batches of samples)
+                    steps_per_epoch=30,      # number of images per epochs ( per batch )
+                    epochs=10,                #Total number of steps (batches of samples)
                                               # to yield from generator before declaring one epoch
                                               # finished and starting the next epoch.
                                               # It should typically be equal to the number of unique samples
@@ -80,7 +95,6 @@ classifier.fit_generator(
                     validation_steps=20)       # number of images per epochs ( per batch )
 
 
-
 # serialize model to JSON
 model_json = classifier.to_json()
 with open("model.json", "w") as json_file:
@@ -88,6 +102,7 @@ with open("model.json", "w") as json_file:
 # serialize weights to HDF5
 classifier.save_weights("model.h5")
 print("Saved model to disk")
+
 
 #
 #
