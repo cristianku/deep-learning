@@ -4,6 +4,8 @@ from keras.layers import MaxPooling2D
 from keras.layers import Flatten
 from keras.layers import Dense
 
+import os
+# os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 
 #Initializing CNN
 
@@ -23,27 +25,37 @@ classifier.add(Flatten ())
 # Step 4 - Full connection
 classifier.add(Dense(output_dim = 128,activation= 'relu'))
 
-classifier.add(Dense(output_dim = 1,activation= 'sigmoid'))
+classifier.add(Dense(output_dim = 1,activation= 'sigmoid')) # --> because its a binary output
+
 classifier.compile(optimizer='adam', loss ='binary_crossentropy', metrics=['accuracy'])
 
 # Part 2 - Fitting the CNN to the images
 
 from keras.preprocessing.image import ImageDataGenerator
 
-train_datagen = ImageDataGenerator(
-    rescale=1. / 255,
-    shear_range=0.2,
-    zoom_range=0.2,
-    horizontal_flip=True)
+# IMAGE augmentation
 
-training_set = train_datagen.flow_from_directory('dataset/training_set',
+
+# rescaling between 0 and 1 + transformations ## many different batches with RANDOM shifts, rotations, etc....
+train_datagen = ImageDataGenerator(
+                                    rescale=1. / 255,
+                                    shear_range=0.2, #geometrical transformation
+                                    zoom_range=0.2,
+                                    horizontal_flip=True)
+
+# batches creation
+training_set = train_datagen.flow_from_directory('datasetsmall/training_set',
                                                 target_size=(64, 64),
                                                 batch_size=32,
                                                 class_mode='binary')
+
+# TEST SET AUGMENTATION
+
+# rescaling between 0 and 1
 test_datagen = ImageDataGenerator(rescale=1. / 255)
 
-
-test_set = test_datagen.flow_from_directory('dataset/test_set',
+# batches creation
+test_set = test_datagen.flow_from_directory('datasetsmall/test_set',
                                             target_size=(64, 64),
                                             batch_size=32,
                                             class_mode='binary')
@@ -51,7 +63,7 @@ test_set = test_datagen.flow_from_directory('dataset/test_set',
 classifier.fit_generator(
                     training_set,
                     steps_per_epoch=80,
-                    epochs=3,
+                    epochs=10,
                     validation_data=test_set,
                     validation_steps=20)
 
