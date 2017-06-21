@@ -1,10 +1,13 @@
-# floyd run --data QacqYeGhTZaWiMYk7B2tpP:dataset "python cnn.py”
-
 import os
-
-print (os.listdir(os.curdir))
-
-print (os.listdir('/dataset'))
+#
+# print (" ########### " )
+# print (" os.curdir = " + os.curdir)
+# print (" ########### ")
+# exit()
+#
+# print (os.listdir(os.curdir))
+#
+# print (os.listdir('/dataset'))
 
 if os.path.exists('/dataset'):
     data_folder = '/dataset'
@@ -19,7 +22,7 @@ else:
 
 print (" ********* "   )
 print (" ********* "   )
-print ("data folder "  + data_folder )
+print ("data folder: "  + data_folder )
 print (" ********* "   )
 
 from keras.models import  Sequential
@@ -104,8 +107,8 @@ test_set        = test_datagen.flow_from_directory(data_folder + '/test_set',
 #
 classifier.fit_generator(
                     training_set,
-                    steps_per_epoch=100,      # number of images per epochs ( per batch )
-                    epochs=5,                #Total number of steps (batches of samples)
+                    steps_per_epoch=1000,      # number of images per epochs ( per batch )
+                    epochs=32,                #Total number of steps (batches of samples)
                                               # to yield from generator before declaring one epoch
                                               # finished and starting the next epoch.
                                               # It should typically be equal to the number of unique samples
@@ -116,15 +119,23 @@ classifier.fit_generator(
                                               # for the validation data
                                               # A tuple (inputs, targets)
                                               # A tuple (inputs, targets, sample_weights).
-                    validation_steps=20)       # number of images per epochs ( per batch )
+                    validation_steps=200       # number of images per epochs ( per batch )
+                    )
 
-
+print (" ########### ")
+print (" ########### ")
+print (" ########### ")
+print (" saving model to " + output_folder + "/model.json")
+print (" ########### ")
+print (" ########### ")
+print (" ########### ")
+print (" ########### ")
 # serialize model to JSON
 model_json = classifier.to_json()
-with open(output_folder + "model.json", "w") as json_file:
+with open(output_folder + "/model.json", "w") as json_file:
     json_file.write(model_json)
 # serialize weights to HDF5
-classifier.save_weights(output_folder + "model.h5")
+classifier.save_weights(output_folder + "/model.h5")
 print("Saved model to disk")
 
 
